@@ -2,8 +2,12 @@
     "swagger": "2.0",
     "info": {
         "title": "Easyac API",
-        "description": "Make Requests to Portal do Aluno SenacRS",
-        "version": "1.0.0"
+        "description": "Navegue nos seus dados do Portal do Aluno SenacRS através de uma API Web. \n\nAs chamadas são feitas para a url https://api.easyac.xyz. Sendo, todas elas, trafegadas em HTTPS.\n\nEm nenhum momento as informações de login do aluno são persistidas em banco de dados. Para saber mais sobre o projeto acesse https://github.com/easyac/crawler.\n",
+        "version": "1.0.0",
+        "contact": {
+            "name": "Ícaro Heimig",
+            "email": "icaro.mh@gmail.com"
+        }
     },
     "host": "api.easyac.xyz",
     "schemes": [
@@ -22,8 +26,8 @@
     "paths": {
         "/login": {
             "post": {
-                "summary": "Autenticação do aluno",
-                "description": "Autentica o aluno no portal do aluno SENACRS e retorna o token autenticado.\n",
+                "summary": "Autenticar aluno",
+                "description": "A partir das credenciais de acesso de uma aluno, autentica ele na API e retorna o token para ser utilizado nas requisições seguintes, autenticando-as.\n\nPara utilizar o token gerado, insira ele no campo Token no topo da página e clique em \"explore\"\n",
                 "parameters": [
                     {
                         "name": "aluno",
@@ -38,7 +42,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Aluno Autenticado",
+                        "description": "Ok",
                         "schema": {
                             "$ref": "#/definitions/AlunoToken"
                         }
@@ -56,13 +60,13 @@
                         "api_key": []
                     }
                 ],
-                "summary": "Faltas do aluno",
-                "description": "Retorna todas as faltas do aluno autenticado.\n",
+                "summary": "Listar faltas",
+                "description": "Retorna todas as faltas do aluno autenticado, pode-se filtrar por ano e semestre.\n",
                 "parameters": [
                     {
                         "name": "ano",
                         "in": "query",
-                        "description": "Ano da falta.",
+                        "description": "Ano letivo",
                         "required": false,
                         "type": "integer",
                         "format": "int32"
@@ -70,10 +74,14 @@
                     {
                         "name": "semestre",
                         "in": "query",
-                        "description": "Semestre da falta",
+                        "description": "Semestre letivo",
                         "required": false,
                         "type": "integer",
-                        "format": "int32"
+                        "format": "int32",
+                        "enum": [
+                            1,
+                            2
+                        ]
                     }
                 ],
                 "tags": [
@@ -81,7 +89,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Um array de Faltas",
+                        "description": "Ok",
                         "schema": {
                             "type": "array",
                             "items": {
@@ -105,13 +113,13 @@
                         "api_key": []
                     }
                 ],
-                "summary": "Notas do aluno",
-                "description": "Retorna todas as notas do aluno autenticado.\n",
+                "summary": "Listar notas",
+                "description": "Retorna todas as notas do aluno autenticado, pode-se filtrar por ano e semestre.\n",
                 "parameters": [
                     {
                         "name": "ano",
                         "in": "query",
-                        "description": "Ano da nota.",
+                        "description": "Ano letivo",
                         "required": false,
                         "type": "integer",
                         "format": "int32"
@@ -119,10 +127,14 @@
                     {
                         "name": "semestre",
                         "in": "query",
-                        "description": "Semestre da nota",
+                        "description": "Semestre letivo",
                         "required": false,
-                        "type": "number",
-                        "format": "int32"
+                        "type": "integer",
+                        "format": "int32",
+                        "enum": [
+                            1,
+                            2
+                        ]
                     }
                 ],
                 "tags": [
@@ -130,7 +142,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Um array de Notas",
+                        "description": "Ok",
                         "schema": {
                             "type": "array",
                             "items": {
@@ -149,7 +161,7 @@
         },
         "/scrap/notas": {
             "get": {
-                "summary": "Atualiza as notas do aluno",
+                "summary": "Atualizar notas do aluno no banco de dados",
                 "security": [
                     {
                         "api_key": []
@@ -174,7 +186,7 @@
         },
         "/scrap/faltas": {
             "get": {
-                "summary": "Atualiza as faltas do aluno",
+                "summary": "Atualiza as faltas do aluno no banco de dados",
                 "security": [
                     {
                         "api_key": []
@@ -205,6 +217,9 @@
                 "token": {
                     "type": "string"
                 }
+            },
+            "example": {
+                "token": "eyJhcGciUiJIUfI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IjYxMTQyMDM3OCIsImlkIjoiNTdmMDNmOTMwZDg3NjcwMDEzOWJiY2NmIiwiaWF0IjoxNDc3NzkzMTk4fQ.ewbwafBHXxo4sdgRAfVcitBAdzViD7E4f8xTvRZbk7p4"
             }
         },
         "Aluno": {
@@ -213,12 +228,17 @@
                 "unidade": {
                     "type": "integer"
                 },
-                "password": {
-                    "type": "string"
-                },
                 "username": {
                     "type": "string"
+                },
+                "password": {
+                    "type": "string"
                 }
+            },
+            "example": {
+                "unidade": 63,
+                "usernane": "631420378",
+                "password": "tuasenha"
             }
         },
         "Falta": {
@@ -239,6 +259,13 @@
                 "faltas": {
                     "type": "integer"
                 }
+            },
+            "example": {
+                "cursoId": 365,
+                "ano": 2016,
+                "semestre": 2,
+                "disciplina": "TCC I",
+                "faltas": 4
             }
         },
         "Nota": {
@@ -265,6 +292,20 @@
                         "$ref": "#/definitions/Parciais"
                     }
                 }
+            },
+            "example": {
+                "cursoId": 365,
+                "ano": 2014,
+                "semestre": 2,
+                "disciplina": "Gerência de Projetos",
+                "conceito": "B",
+                "parciais": [
+                    {
+                        "descricao": "Liderança",
+                        "ordemParcial": 1,
+                        "valorAvaliacaoParcial": "B"
+                    }
+                ]
             }
         },
         "Parciais": {
@@ -279,21 +320,11 @@
                 "valorAvaliacaoParcial": {
                     "type": "string"
                 }
-            }
-        },
-        "Error": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "fields": {
-                    "type": "string"
-                }
+            },
+            "example": {
+                "descricao": "Liderança",
+                "ordemParcial": 1,
+                "valorAvaliacaoParcial": "B"
             }
         }
     }
