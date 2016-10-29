@@ -45,9 +45,6 @@
                     },
                     "400": {
                         "description": "Bad Request"
-                    },
-                    "401": {
-                        "description": "Unauthorized"
                     }
                 }
             }
@@ -146,6 +143,56 @@
                     },
                     "404": {
                         "description": "Notas Not Found"
+                    }
+                }
+            }
+        },
+        "/scrap/notas": {
+            "get": {
+                "summary": "Atualiza as notas do aluno",
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ],
+                "description": "Atualiza as informações no banco de dados referentes a nota do aluno autenticado. Esse processo pode demorar alguns segundos.\n",
+                "tags": [
+                    "Scrap"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Dados atualizados"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                }
+            }
+        },
+        "/scrap/faltas": {
+            "get": {
+                "summary": "Atualiza as faltas do aluno",
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ],
+                "description": "Atualiza as informações no banco de dados referentes a faltas do aluno autenticado. Esse processo pode demorar alguns segundos.\n",
+                "tags": [
+                    "Scrap"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Dados atualizados"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
                     }
                 }
             }
