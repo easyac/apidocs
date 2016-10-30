@@ -27,7 +27,7 @@
         "/login": {
             "post": {
                 "summary": "Autenticar aluno",
-                "description": "A partir das credenciais de acesso de um aluno, autentica ele na API e retorna o token para ser utilizado nas requisições seguintes, autenticando-as.\n\nPara utilizar o token gerado, insira ele no campo Token no topo da página e clique em \"explore\"\n",
+                "description": "A partir das credenciais de acesso de um aluno, autentica ele na API e retorna o token para ser utilizado nas requisições seguintes, autenticando-as.\n\nPara utilizar o token gerado, insira ele no campo Token no topo da página e clique em \"Explorar\"\n",
                 "parameters": [
                     {
                         "name": "aluno",
