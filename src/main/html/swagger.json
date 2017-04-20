@@ -26,8 +26,8 @@
   "paths": {
     "/user": {
       "post": {
-        "summary": "Cadastra usuário",
-        "description": "Cadastra um usuário Easyac\n",
+        "summary": "Cadastrar usuário",
+        "description": "Cadastra um usuário na API Easyac\n",
         "parameters": [
           {
             "name": "user",
@@ -42,9 +42,29 @@
         ],
         "responses": {
           "200": {
+            "description": "Ok"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      },
+      "get": {
+        "security": [
+          {
+            "api_key": []
+          }
+        ],
+        "summary": "Visualizar dados do usuário",
+        "description": "Visualizar dados de um usuário na API Easyac\n",
+        "tags": [
+          "User"
+        ],
+        "responses": {
+          "200": {
             "description": "Ok",
             "schema": {
-              "$ref": "#/definitions/AlunoToken"
+              "$ref": "#/definitions/UserSchema"
             }
           },
           "400": {
@@ -53,8 +73,13 @@
         }
       },
       "put": {
-        "summary": "Atualiza usuário",
-        "description": "Atualiza um usuário Easyac\n",
+        "security": [
+          {
+            "api_key": []
+          }
+        ],
+        "summary": "Atualizar usuário",
+        "description": "Atualizar usuário autenticado na API Easyac\n",
         "parameters": [
           {
             "name": "user",
@@ -69,10 +94,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Ok",
-            "schema": {
-              "$ref": "#/definitions/AlunoToken"
-            }
+            "description": "Ok"
           },
           "400": {
             "description": "Bad Request"
@@ -82,42 +104,14 @@
     },
     "/user/auth": {
       "post": {
-        "summary": "Autenticar usuário Easyac",
-        "description": "A partir dos dados de acesso de um usuário, autentica ele na API e retorna um token de acesso.\nPara utilizar o token gerado, insira ele no campo Token no topo da página e clique em \"Explorar\"\n",
+        "summary": "Autenticar usuário",
+        "description": "A partir de dados de acesso de um usuário, autentica-se na API e é retornado um JSON Web Token válido para autenticar futuras requisições\nPara utilizar o token gerado, insira ele no campo Token no topo da página e clique em \"Explorar\"\n",
         "parameters": [
           {
             "name": "user",
             "in": "body",
             "schema": {
-              "$ref": "#/definitions/Aluno"
-            }
-          }
-        ],
-        "tags": [
-          "User"
-        ],
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "schema": {
-              "$ref": "#/definitions/AlunoToken"
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        }
-      }
-    },
-    "/user/associate": {
-      "post": {
-        "description": "Associa o usuário e senha do aluno no Portal do Aluno SenacRS com o usuário Easyac, permitindo que o Robô busque os dados periódicamente. \n",
-        "parameters": [
-          {
-            "name": "user",
-            "in": "body",
-            "schema": {
-              "$ref": "#/definitions/Aluno"
+              "$ref": "#/definitions/User"
             }
           }
         ],
@@ -139,26 +133,19 @@
     },
     "/user/revalidate": {
       "post": {
-        "summary": "Associa login Portal com usuário Easyac",
-        "description": "Associa o usuário e senha do aluno no Portal do Aluno SenacRS com o usuário Easyac, permitindo que o Robô busque os dados periódicamente. \n",
-        "parameters": [
+        "security": [
           {
-            "name": "user",
-            "in": "body",
-            "schema": {
-              "$ref": "#/definitions/Aluno"
-            }
+            "api_key": []
           }
         ],
+        "summary": "Renovar token de acesso",
+        "description": "Solicita a renovação do token de acesso\n",
         "tags": [
           "User"
         ],
         "responses": {
           "200": {
-            "description": "Ok",
-            "schema": {
-              "$ref": "#/definitions/AlunoToken"
-            }
+            "description": "Ok"
           },
           "400": {
             "description": "Bad Request"
@@ -168,8 +155,13 @@
     },
     "/senac/login": {
       "post": {
-        "summary": "Autenticar aluno",
-        "description": "A partir das credenciais de acesso de um aluno, autentica ele no Portal do Aluno senac e permite o robô buscar os dados no Portal.\n",
+        "security": [
+          {
+            "api_key": []
+          }
+        ],
+        "summary": "Autenticar aluno no Portal do Aluno SenacRS",
+        "description": "A partir das credenciais de acesso de um aluno, autentica ele no Portal do Aluno SenacRS e permite o robô buscar os dados no Portal.\n",
         "parameters": [
           {
             "name": "aluno",
@@ -188,6 +180,9 @@
           },
           "400": {
             "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
       }
@@ -199,30 +194,8 @@
             "api_key": []
           }
         ],
-        "summary": "Listar notas",
-        "description": "Retorna.\n",
-        "parameters": [
-          {
-            "name": "ano",
-            "in": "query",
-            "description": "Ano letivo",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "semestre",
-            "in": "query",
-            "description": "Semestre letivo",
-            "required": false,
-            "type": "integer",
-            "format": "int32",
-            "enum": [
-              1,
-              2
-            ]
-          }
-        ],
+        "summary": "Solicitar sincronia dos dados do Portal do Aluno SenacRS",
+        "description": "Solicita ao robô que busque e salve os dados do Portal do Aluno SenacRS na API Easyac\n",
         "tags": [
           "Senac"
         ],
@@ -230,17 +203,11 @@
           "200": {
             "description": "Ok",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Nota"
-              }
+              "$ref": "#/definitions/Status"
             }
           },
           "401": {
             "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Notas Not Found"
           }
         }
       }
@@ -252,30 +219,8 @@
             "api_key": []
           }
         ],
-        "summary": "Listar notas",
-        "description": "Retorna.\n",
-        "parameters": [
-          {
-            "name": "ano",
-            "in": "query",
-            "description": "Ano letivo",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "semestre",
-            "in": "query",
-            "description": "Semestre letivo",
-            "required": false,
-            "type": "integer",
-            "format": "int32",
-            "enum": [
-              1,
-              2
-            ]
-          }
-        ],
+        "summary": "Verificar status da última solicitação de sincronia",
+        "description": "Retorna o status da última atualização.\n",
         "tags": [
           "Senac"
         ],
@@ -283,30 +228,24 @@
           "200": {
             "description": "Ok",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Nota"
-              }
+              "$ref": "#/definitions/Status"
             }
           },
           "401": {
             "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Notas Not Found"
           }
         }
       }
     },
-    "/subjects": {
+    "/classes": {
       "get": {
         "security": [
           {
             "api_key": []
           }
         ],
-        "summary": "Listar notas",
-        "description": "Retorna.\n",
+        "summary": "Listar disciplinas do aluno autenticado",
+        "description": "Retorna a lista de disciplinas de acordo com os dados solicitados, contendo informações sobre notas e faltas.\n",
         "parameters": [
           {
             "name": "ano",
@@ -338,15 +277,12 @@
             "schema": {
               "type": "array",
               "items": {
-                "$ref": "#/definitions/Nota"
+                "$ref": "#/definitions/Class"
               }
             }
           },
           "401": {
             "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Notas Not Found"
           }
         }
       }
@@ -364,6 +300,17 @@
         "token": "eyJhcGciUiJIUfI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IjYxMTQyMDM3OCIsImlkIjoiNTdmMDNmOTMwZDg3NjcwMDEzOWJiY2NmIiwiaWF0IjoxNDc3NzkzMTk4fQ.ewbwafBHXxo4sdgRAfVcitBAdzViD7E4f8xTvRZbk7p4"
       }
     },
+    "Status": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        }
+      },
+      "example": {
+        "status": "pending"
+      }
+    },
     "Aluno": {
       "type": "object",
       "properties": {
@@ -375,12 +322,16 @@
         },
         "password": {
           "type": "string"
+        },
+        "storePassword": {
+          "type": "boolean"
         }
       },
       "example": {
         "unidade": 63,
         "username": "631420378",
-        "password": "tuasenha"
+        "password": "tuasenha",
+        "storePassword": false
       }
     },
     "User": {
@@ -398,10 +349,53 @@
         "password": "tuasenha"
       }
     },
-    "Nota": {
+    "UserSchema": {
       "type": "object",
       "properties": {
-        "cursoId": {
+        "email": {
+          "type": "string"
+        },
+        "webToken": {
+          "type": "string"
+        },
+        "senacCredentials": {
+          "type": "object",
+          "properties": {
+            "username": {
+              "type": "string"
+            },
+            "unity": {
+              "type": "integer"
+            },
+            "storePassword": {
+              "type": "boolean"
+            },
+            "lastSync": {
+              "type": "string",
+              "format": "date"
+            },
+            "isSyncing": {
+              "type": "boolean"
+            }
+          }
+        }
+      },
+      "example": {
+        "email": "icaro.mh@gmail.com",
+        "webToken": "10928312313.1209381031.123091823",
+        "senacCredentials": {
+          "username": "631420378",
+          "unity": 63,
+          "storePassword": false,
+          "lastSync": "4/19/2017 22:32:03",
+          "isSyncing": false
+        }
+      }
+    },
+    "Class": {
+      "type": "object",
+      "properties": {
+        "_id": {
           "type": "string"
         },
         "ano": {
@@ -410,51 +404,73 @@
         "semestre": {
           "type": "integer"
         },
-        "disciplina": {
+        "periodo": {
           "type": "string"
         },
-        "conceito": {
+        "descricaoDisciplina": {
           "type": "string"
         },
-        "parciais": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Parciais"
+        "descricaoReduzidaDisciplina": {
+          "type": "string"
+        },
+        "notas": {
+          "type": "object",
+          "properties": {
+            "conceito": {
+              "type": "string"
+            },
+            "parciais": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "descricao": {
+                    "type": "string"
+                  },
+                  "descricaoReduzida": {
+                    "type": "string"
+                  },
+                  "ordemParcial": {
+                    "type": "integer"
+                  },
+                  "valorAvaliacaoParcial": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "faltas": {
+          "type": "object",
+          "properties": {
+            "total": {
+              "type": "integer"
+            }
           }
         }
       },
       "example": {
-        "cursoId": 365,
-        "ano": 2014,
-        "semestre": 2,
-        "disciplina": "Gerência de Projetos",
-        "conceito": "B",
-        "parciais": [
-          {
-            "descricao": "Liderança",
-            "ordemParcial": 1,
-            "valorAvaliacaoParcial": "B"
-          }
-        ]
-      }
-    },
-    "Parciais": {
-      "type": "object",
-      "properties": {
-        "descricao": {
-          "type": "string"
+        "_id": "58f18e0275b5be4e92182854",
+        "ano": 2016,
+        "semestre": 1,
+        "periodo": "2016|1",
+        "descricaoDisciplina": "Sistemas Distribuídos",
+        "descricaoReduzidaDisciplina": "SIST.DISTR",
+        "notas": {
+          "parciais": [
+            {
+              "descricao": "Trabalho 1",
+              "descricaoReduzida": "T1",
+              "ordemParcial": 1,
+              "valorAvaliacaoParcial": "B"
+            }
+          ],
+          "conceito": "B"
         },
-        "ordemParcial": {
-          "type": "integer"
-        },
-        "valorAvaliacaoParcial": {
-          "type": "string"
+        "faltas": {
+          "total": 4
         }
-      },
-      "example": {
-        "descricao": "Liderança",
-        "ordemParcial": 1,
-        "valorAvaliacaoParcial": "B"
       }
     }
   }
