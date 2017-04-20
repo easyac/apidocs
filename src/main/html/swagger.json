@@ -38,7 +38,7 @@
           }
         ],
         "tags": [
-          "User"
+          "Usuario"
         ],
         "responses": {
           "200": {
@@ -58,7 +58,7 @@
         "summary": "Visualizar dados do usuário",
         "description": "Visualizar dados de um usuário na API Easyac\n",
         "tags": [
-          "User"
+          "Usuario"
         ],
         "responses": {
           "200": {
@@ -90,7 +90,7 @@
           }
         ],
         "tags": [
-          "User"
+          "Usuario"
         ],
         "responses": {
           "200": {
@@ -116,7 +116,7 @@
           }
         ],
         "tags": [
-          "User"
+          "Usuario"
         ],
         "responses": {
           "200": {
@@ -141,7 +141,7 @@
         "summary": "Renovar token de acesso",
         "description": "Solicita a renovação do token de acesso\n",
         "tags": [
-          "User"
+          "Usuario"
         ],
         "responses": {
           "200": {
@@ -162,6 +162,40 @@
         ],
         "summary": "Autenticar aluno no Portal do Aluno SenacRS",
         "description": "A partir das credenciais de acesso de um aluno, autentica ele no Portal do Aluno SenacRS e permite o robô buscar os dados no Portal.\n",
+        "parameters": [
+          {
+            "name": "aluno",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/Aluno"
+            }
+          }
+        ],
+        "tags": [
+          "Senac"
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/senac/associate": {
+      "put": {
+        "security": [
+          {
+            "api_key": []
+          }
+        ],
+        "summary": "Associar credenciais do aluno ao usuário",
+        "description": "Associa as credenciais de acesso de um aluno ao usuário logado na API Easyac.\n",
         "parameters": [
           {
             "name": "aluno",
@@ -314,7 +348,7 @@
     "Aluno": {
       "type": "object",
       "properties": {
-        "unidade": {
+        "unity": {
           "type": "integer"
         },
         "username": {
@@ -328,7 +362,7 @@
         }
       },
       "example": {
-        "unidade": 63,
+        "unity": 63,
         "username": "631420378",
         "password": "tuasenha",
         "storePassword": false
